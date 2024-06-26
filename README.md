@@ -12,9 +12,6 @@ Clerkburk (CCP-Task-Manager)
 ## Requirements
 ```json
 In VSC @workspace/.vscode/tasks.json...
-  "type": "cppbuild",
-  "label": "C/C++: g++-13 Aktive Datei kompilieren",
-  "command": "/usr/bin/g++13",
   "args": [
     "-fdiagnostics-color=always",
     "-g",
