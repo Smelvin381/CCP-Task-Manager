@@ -58,31 +58,14 @@
 //     `-.______ /'---'   `''-...... -'  | |     |   |  \  \|/\'..' |   `'.  || |     |   |  \  \   | | | | |_ _| |_
 //             `                        |_|     '    \  \  '  `'-'`'   .'|  '|_|     '    \  \  \   \_/|___|_|_____|
 //                                             '------'  '---'      `-'  `--'       '------'  '---'
-//
-// This file is part of ClerkBurkv0.1
-//
-// ClerkBurk is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// ClerkBurk is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with ClerkBurk. If not, see <https://www.gnu.org/licenses/>.
-//
-// Contact: @Smelvin381 on GitHub
-//
 // This is the main file of the program. It is the entry point of the program. And dont you dare include this file in anything else.
-//
 // Classes and functions in this main.ccp are project specific.
+
 
 
 #include "../resources/cslib.hpp" // Custom library
 using enum cslib::MessageStyling::MessageType; // Message type
+
 
 
 
