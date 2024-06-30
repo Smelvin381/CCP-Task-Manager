@@ -68,15 +68,23 @@ using enum cslib::MessageStyling::MessageType; // Message type
 
 
 
-
 class ClerkBurk { // Depedancies: Only the cslib
   // The main class to handle the events in the program
+  private:
+    static constexpr std::string_view question = "Press 'E' to exit:"; // The question to exit the program
+
   public:
     static void ui() { // The user interface
       while (true){
-        const char userInput = cslib::MessageStyling::ask_question<char>("What do you want to do? E(xit)");
 
-        switch (userInput) {
+        std::cout << cslib::MessageStyling::g(cslib::MessageStyling::MessageType::QUESTION) <<
+          question << cslib::MessageStyling::g(cslib::MessageStyling::MessageType::INPUT);
+
+        std::string userInput;
+        std::getline(std::cin, userInput);
+        std::cout << cslib::MessageStyling::g(cslib::MessageStyling::MessageType::RESET);
+
+        switch (userInput[0]) { // Doesnt work
           case 'E': case 'e': case '\0': return;
           default: std::cout << cslib::MessageStyling::g(ERROR) << "I don't understand." << "\n";
         }
@@ -89,16 +97,6 @@ class ClerkBurk { // Depedancies: Only the cslib
 int main() {
   ClerkBurk clerkBurk; // The main object of the program
   clerkBurk.ui(); // Start the user interface
-
-  static constexpr std::string_view test = "Hello, World!";
-
-  cslib::MessageBuilding messageBuilder(REPLY); // The message builder object
-
-  messageBuilder << 48848484848481.0 << std::endl; // Add the test string to the message
-  messageBuilder << test << std::endl; // Add the test string to the message
-  messageBuilder << "Hello, World!"; // Add the test string to the message
-
-  std::cout << messageBuilder.womit() << "\n"; // Print the message
 
   return 0;
 }

@@ -5,14 +5,12 @@
             "label": "C/C++: g++-13 Aktive Datei kompilieren",
             "command": "/usr/bin/g++-13",
             "args": [
-                "-fdiagnostics-color=always",
-                "-g",
-                "-std=c++2b",
-                "-pthread",
                 "-O3",
+                "-std=c++23",
                 "${file}",
                 "-o",
-                "${fileDirname}/${fileBasenameNoExtension}"
+                "${fileDirname}/${fileBasenameNoExtension}",
+                "-static"
             ],
             "options": {
                 "cwd": "${fileDirname}"

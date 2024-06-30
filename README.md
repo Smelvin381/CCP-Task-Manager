@@ -13,14 +13,12 @@ Clerkburk (CCP-Task-Manager)
 ```json
 In VSC @workspace/.vscode/tasks.json...
   "args": [
-    "-fdiagnostics-color=always",
-    "-g",
-    "-std=c++2b",
-    "-pthread",
-    "-O3",
+    "-O3", // Optimization level 3 (highest)
+    "-std=c++23", // C++23
     "${file}",
     "-o",
-    "${fileDirname}/${fileBasenameNoExtension}"
+    "${fileDirname}/${fileBasenameNoExtension}",
+    "-static" // Static linking
   ],
 ```
 
@@ -31,8 +29,11 @@ In VSC @workspace/.vscode/tasks.json...
   * sudo add-apt-repository ppa:ubuntu-toolchain-r/test
   * sudo apt-get install g++-13
 
-* Windows 
- * Not sure yet
+* Windows x86_64 (Msys2):
+ * Download the newest version of Msys
+ * $ pacman -S mingw-w64-ucrt-x86_64-gcc
+ * $ pacman -S mingw-w64-ucrt-x86_64-gdb
+ * g++ -version should be ±13
 
 * MacOS
  * Not sure yet
@@ -158,3 +159,220 @@ class ThreadParty { // Depedancies: itself
     }
     ~ThreadParty() {stop();}
 };
+
+
+
+class JackOfAllTrades { // Depedancies: 
+  // An highly specialized class to handle common tasks
+  public:
+    template <typename T>
+    static T get_true_value(const std::string& s) {
+      // Convert string to value
+
+      if (std::is_same<T, char>::value) {
+        return s.empty() ? '\0' : s[0];
+      }
+
+
+      if (std::is_same<T, bool>::value) {
+        if (s == "true" or s == "True" or s == "TRUE" or s == "1") return 1;
+        else if (s == "false" or s == "False" or s == "FALSE" or s == "0") return 0;
+      }
+
+      std::cout << "Not implemented yet. \n";
+      return T();
+      }
+};
+
+
+
+
+class TimeStamp { // Depedancies: itself (overloading)
+  // A class to handle the "general" time for example for logs
+  private:
+    unsigned short hour;
+    unsigned short minute;
+    unsigned short second;
+    unsigned short day;
+    unsigned short month;
+    unsigned short year;
+    std::string dayOfWeek;
+    std::string monthName;
+    std::string completeDate;
+
+    static constexpr unsigned short TIME_ZONE = 2; // Time zone (in hours) from UTC. 2+ because i live in Germany
+    static constexpr const char* WEEKDAYS[7] = {
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday"
+    };
+    static constexpr const char* MONTHS[12] = {
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December"
+    };
+
+  public:
+    enum class TimeFormat {
+      HOUR,
+      MINUTE,
+      SECOND,
+      DAY,
+      MONTH,
+      YEAR,
+    };
+    enum class OtherTimeFormats {
+      COMPLETE_DATE,
+      DAY_OF_WEEK,
+      MONTH_NAME,
+    };
+
+
+
+    explicit TimeStamp() {this->update();} // Update the time when the object is created
+
+
+
+    const unsigned short& operator [] (const TimeFormat format) const {
+      // Get the time by index
+      // Example: ts['h'] -> 12
+
+      switch (format) {
+        case TimeFormat::HOUR: return this->hour;
+        case TimeFormat::MINUTE: return this->minute;
+        case TimeFormat::SECOND: return this->second;
+        case TimeFormat::DAY: return this->day;
+        case TimeFormat::MONTH: return this->month;
+        case TimeFormat::YEAR: return this->year;
+        default: throw std::invalid_argument("Invalid time format");
+      }
+    }
+    const std::string& operator [] (const OtherTimeFormats format) const {
+      // Get the time by index
+      // Example: ts['dayOfWeek'] -> "Monday"
+
+      switch (format) {
+        case OtherTimeFormats::COMPLETE_DATE: return this->completeDate;
+        case OtherTimeFormats::DAY_OF_WEEK: return this->dayOfWeek;
+        case OtherTimeFormats::MONTH_NAME: return this->monthName;
+        default: throw std::invalid_argument("Invalid time format");
+      }
+    }
+
+
+
+    void update() {
+      // Replace all the time values with updated ones
+      // Example: 12:34:59 24.12.2022 -> 12:35:00 24.12.2022
+
+      time_t now = time(0);
+      struct tm currentTime;
+
+      #ifdef _WIN32
+        localtime_s(&currentTime, &now); // For Windows-based systems
+      #else
+        localtime_r(&now, &currentTime); // For Unix-based systems
+      #endif
+
+      this->hour = currentTime.tm_hour + TIME_ZONE;
+      this->minute = currentTime.tm_min;
+      this->second = currentTime.tm_sec;
+      this->day = currentTime.tm_mday;
+      this->month = currentTime.tm_mon + 1;
+      this->year = currentTime.tm_year + 1900;
+      this->dayOfWeek = WEEKDAYS[currentTime.tm_wday];
+      this->monthName = MONTHS[currentTime.tm_mon];
+      this->completeDate = std::to_string(this->day) +
+                     "." + std::to_string(this->month) +
+                     "." + std::to_string(this->year);
+    }
+};
+
+
+
+
+
+
+
+
+
+    // Add text
+    constexpr void a(std::string_view text) {
+      // Add text to the message
+      // Example: mb.add_text("Hello, World!") -> "Hello, World!"
+
+      for (const char& c : text) {
+        if (this->messageLength < MaxLenght) {
+          this->message[this->messageLength++] = c;
+        }
+      }
+    }
+    constexpr MessageBuilding& operator << (std::string_view text) {
+      // Add text to the message
+      // Example: mb << "Hello, World!" -> "Hello, World!"
+
+      for (const char& c : text) {
+        if (this->messageLength < MaxLenght) {
+          this->message[this->messageLength++] = c;
+        }
+      }
+      return *this;
+    }
+
+
+
+    // Add character
+    constexpr MessageBuilding& operator << (char text) {
+      // Add text to the message
+      // Example: mb << 'H' -> "H"
+
+      if (text == '\t') { // Break line and add 4 spaces
+        if (this->messageLength < MaxLenght) {
+          this->message[this->messageLength++] = '\n';
+        }
+        for (unsigned char i = 0; i < 4; i++) {
+          if (this->messageLength < MaxLenght) {
+            this->message[this->messageLength++] = ' ';
+          }
+        }
+        return *this;
+      }
+
+      if (this->messageLength < MaxLenght) {
+        this->message[this->messageLength++] = text;
+      }
+      return *this;
+    }
+
+
+
+  private:
+    std::string buildupMessage;
+  
+  public:
+    constexpr explicit MessageBuilding(const MessageStyling::MessageType type) : buildupMessage(MessageStyling::g(type)) {} // Set the message type
+    constexpr explicit MessageBuilding() : buildupMessage(MessageStyling::g(MessageStyling::MessageType::DEFAULT)) {} // Set the message type
+
+
+
+    // Add a message to the buildup message
+    template <unsigned int S>
+    constexpr void add(const std::array<std::string_view, S> &message) {
+      for (const std::string_view &i : message) {this->buildupMessage += i;}
+    }
+
+    // Get the string
+    constexpr std::string_view g() const {return this->buildupMessage;}
