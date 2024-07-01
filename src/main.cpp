@@ -60,43 +60,68 @@
 //                                             '------'  '---'      `-'  `--'       '------'  '---'
 // This is the main file of the program. It is the entry point of the program. And dont you dare include this file in anything else.
 // Classes and functions in this main.ccp are project specific.
+#include "../resources/cslib.hpp" // Include the library + iostream
+
+using namespace cslib; // Use the namespace
+using enum MessageStyling::MessageType;
+using enum TimeStamp::TimeFormat;
+using enum TimeStamp::OtherTimeFormats;
+
+TimeStamp currentTime; // The current time
 
 
-
-#include "../resources/cslib.hpp" // Custom library
-using enum cslib::MessageStyling::MessageType; // Message type
 
 
 
 class ClerkBurk { // Depedancies: Only the cslib
   // The main class to handle the events in the program
   private:
-    static constexpr std::string_view question = "Press 'E' to exit:"; // The question to exit the program
+
+
+  protected:
+    static void settings() {
+      std::cout << "You opened the settings menu." << "\n";
+    }
+
+
+
+    static void exit() {
+      std::cout << "You exited the program." << "\n";
+    }
+
+
+
+    static void greet() {
+      MessageBuilding mb(DEFAULT);
+      mb << "Welcome to ClerkBurk v0.1!" << std::endl;
+      mb << "It is currently the ";
+      currentTime.print_everything();
+      mb << currentTime[MONTH];
+      mb << " of " << currentTime[MONTH_NAME] << std::endl;
+      std::cout << mb.buildupMessage;
+    }
 
   public:
     static void ui() { // The user interface
       while (true){
-
-        std::cout << cslib::MessageStyling::g(cslib::MessageStyling::MessageType::QUESTION) <<
-          question << cslib::MessageStyling::g(cslib::MessageStyling::MessageType::INPUT);
-
+        greet();
         std::string userInput;
         std::getline(std::cin, userInput);
-        std::cout << cslib::MessageStyling::g(cslib::MessageStyling::MessageType::RESET);
+        std::cout << MessageStyling::g(RESET);
 
-        switch (userInput[0]) { // Doesnt work
-          case 'E': case 'e': case '\0': return;
-          default: std::cout << cslib::MessageStyling::g(ERROR) << "I don't understand." << "\n";
-        }
+        if (userInput == "/settings") {settings();}
+        else if (userInput == "/exit" or userInput == "/skip" or userInput == "") {exit(); break;}
+        else {std::cout << "Unknown command." << "\n";}
+
       }
     }
 };
 
 
 
+
 int main() {
-  ClerkBurk clerkBurk; // The main object of the program
-  clerkBurk.ui(); // Start the user interface
+  ClerkBurk::ui();
 
   return 0;
 }

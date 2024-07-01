@@ -5,12 +5,12 @@
             "label": "C/C++: g++-13 Aktive Datei kompilieren",
             "command": "/usr/bin/g++-13",
             "args": [
-                "-O3",
+                "-O0",
                 "-std=c++23",
                 "${file}",
                 "-o",
                 "${fileDirname}/${fileBasenameNoExtension}",
-                "-static"
+                // "-static"
             ],
             "options": {
                 "cwd": "${fileDirname}"
